@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>扫码发送短信或拨打电话</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            max-width: 400px;
+            margin: auto;
+        }
+        h2 {
+            text-align: center;
+        }
+        label, textarea, button {
+            display: block;
+            width: 100%;
+            margin-bottom: 15px;
+        }
+        textarea {
+            resize: vertical;
+        }
+        button {
+            padding: 10px;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+
+<h2>扫码操作界面</h2>
+
+<!-- 文本输入框 -->
+<label for="message">输入消息内容：</label>
+<textarea id="message" rows="4" cols="30" placeholder="请输入要发送的消息..."></textarea>
+
+<!-- 按钮发送短信 -->
+<button onclick="sendSMS()">发送短信到我的手机</button>
+
+<!-- 按钮拨打电话 -->
+<button onclick="makeCall()">拨打我的电话</button>
+
+<script>
+    // 定义手机号（请替换成您的手机号）
+    const phoneNumber = "您的手机号码";
+
+    // 发送短信函数
+    function sendSMS() {
+        const message = document.getElementById("message").value;
+        
+        if (message.trim() === "") {
+            alert("请输入要发送的消息内容！");
+            return;
+        }
+        
+        // 创建短信链接
+        const smsLink = `sms:${phoneNumber}?body=${encodeURIComponent(message)}`;
+        
+        // 打开短信应用
+        window.location.href = smsLink;
+    }
+
+    // 拨打电话函数
+    function makeCall() {
+        // 创建电话链接
+        const telLink = `tel:${phoneNumber}`;
+        
+        // 打开拨号界面
+        window.location.href = telLink;
+    }
+</script>
+
+</body>
+</html>
