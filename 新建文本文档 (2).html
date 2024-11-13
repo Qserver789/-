@@ -1,76 +1,67 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>扫码发送短信或拨打电话</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            padding: 20px;
-            max-width: 400px;
-            margin: auto;
-        }
-        h2 {
-            text-align: center;
-        }
-        label, textarea, button {
-            display: block;
-            width: 100%;
-            margin-bottom: 15px;
-        }
-        textarea {
-            resize: vertical;
-        }
-        button {
-            padding: 10px;
-            font-size: 16px;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>通知车主挪车</title>
+<style>
+          * { box-sizing: border-box; margin: 0; padding: 0; }
+          body { font-family: Arial, sans-serif; display: flex; align-items: center; justify-content: center; height: 100vh; background: #f0f2f5; color: #333; }
+          .container { text-align: center; padding: 20px; width: 100%; max-width: 400px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); background: #fff; }
+          h1 { font-size: 24px; margin-bottom: 20px; color: #007bff; }
+          p { margin-bottom: 20px; font-size: 16px; color: #555; }
+          button { 
+            width: 100%; 
+            padding: 15px; 
+            margin: 10px 0; 
+            font-size: 18px; 
+            font-weight: bold; 
+            color: #fff; 
+            border: none; 
+            border-radius: 6px; 
+            cursor: pointer; 
+            transition: background 0.3s; 
+          }
+          .notify-btn { background: #28a745; }
+          .notify-btn:hover { background: #218838; }
+          .call-btn { background: #17a2b8; }
+          .call-btn:hover { background: #138496; }
+        </style>
 </head>
 <body>
-
-<h2>扫码操作界面</h2>
-
-<!-- 文本输入框 -->
-<label for="message">输入消息内容：</label>
-<textarea id="message" rows="4" cols="30" placeholder="请输入要发送的消息..."></textarea>
-
-<!-- 按钮发送短信 -->
-<button onclick="sendSMS()">发送短信到我的手机</button>
-
-<!-- 按钮拨打电话 -->
-<button onclick="makeCall()">拨打我的电话</button>
-
+<div class="container">
+        <h1>通知车主挪车</h1>
+        <p>如需通知车主，请点击以下按钮</p>
+        <button class="notify-btn" onclick="notifyOwner()">通知车主挪车</button>
+        <button class="call-btn" onclick="callOwner()">拨打车主电话</button>
 <script>
-    // 定义手机号（请替换成您的手机号）
-    const phoneNumber = "您的手机号码";
-
-    // 发送短信函数
-    function sendSMS() {
-        const message = document.getElementById("message").value;
-        
-        if (message.trim() === "") {
-            alert("请输入要发送的消息内容！");
-            return;
+function notifyOwner() {
+    fetch("https://wxpusher.zjiecode.com/api/send/message", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({
+            appToken: "AT_P5C6N7QRSxgEcVm8dRayH4oIpxoX87Bc",
+            content: "您好，有人需要您挪车，请及时处理。",
+            contentType: 1,
+            uids: ["UID_VItis4EDEDW9qx4JqcSZgemMFbUx"]
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.code === 1000) {
+            alert("通知已发送！");
+        } else {
+            alert("通知发送失败，请稍后重试。");
         }
-        
-        // 创建短信链接
-        const smsLink = `sms:${phoneNumber}?body=${encodeURIComponent(message)}`;
-        
-        // 打开短信应用
-        window.location.href = smsLink;
-    }
-
-    // 拨打电话函数
-    function makeCall() {
-        // 创建电话链接
-        const telLink = `tel:${phoneNumber}`;
-        
-        // 打开拨号界面
-        window.location.href = telLink;
-    }
+    })
+    .catch(error => {
+        console.error("Error sending notification:", error);
+        alert("通知发送出错，请检查网络连接。");
+    });
+}
+ 
+function callOwner() {
+    window.location.href = "tel:18595509627";
+}
 </script>
-
-</body>
-</html>
+</body></html>
